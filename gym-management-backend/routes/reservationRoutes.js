@@ -1,9 +1,17 @@
+// reservationRoutes.js
 const express = require('express');
 const router = express.Router();
-const { reserveSession, getMyReservations } = require('../controllers/reservationController');
-const { verifyToken } = require('../middlewares/authMiddleware');
 
-router.post('/:sessionId', reserveSession);
-router.get('/my-reservations', getMyReservations);
+router.get('/', (req, res) => {
+    // Fetch and return reservations from DB
+    res.json([/* array of reservations */]);
+});
+
+router.post('/', (req, res) => {
+    // Create a new reservation
+    const newReservation = req.body;
+    // Save it to the database
+    res.status(201).json(newReservation);
+});
 
 module.exports = router;

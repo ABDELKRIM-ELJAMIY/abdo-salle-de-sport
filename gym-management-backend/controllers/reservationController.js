@@ -1,42 +1,42 @@
-const Session = require('../models/Session');
 const Reservation = require('../models/Reservation');
 
-// Réserver une session
-const reserveSession = async (req, res) => {
+// Create a new reservation
+const createReservation = async (req, res) => {
     try {
-        const session = await Session.findById(req.params.sessionId);
-        if (!session) return res.status(404).json({ message: 'Session non trouvée' });
+        const { date, time, description } = req.body;
 
-        if (session.availableSlots <= 0) {
-            return res.status(400).json({ message: 'Aucune place disponible pour cette session' });
+        // Ensure the date, time, and description are provided
+        if (!date || !time || !description) {
+            return res.status(400).json({ message: 'All fields are required.' });
         }
 
-        const reservation = new Reservation({
-            user: req.user.id,
-            session: session._id,
-            startDate: session.startDate,
-            endDate: session.endDate,
+        // Create a new reservation
+        const newReservation = new Reservation({
+            date,
+            time,
+            description,
+            userId: req.user.id // Assuming you are using JWT to attach user ID
         });
 
-        await reservation.save();
+        // Save the reservation to the database
+        await newReservation.save();
 
-        session.availableSlots -= 1;
-        await session.save();
-
-        res.status(201).json(reservation);
-    } catch (err) {
-        res.status(400).json({ message: 'Erreur lors de la réservation', error: err });
+        res.status(201).json({ message: 'Reservation created successfully!' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error. Could not create reservation.' });
     }
 };
 
-// Obtenir les réservations d'un utilisateur
-const getMyReservations = async (req, res) => {
+// Fetch all reservations for the current user (optional, depending on your needs)
+const getReservations = async (req, res) => {
     try {
-        const reservations = await Reservation.find({ user: req.user.id }).populate('session');
+        const reservations = await Reservation.find({ userId: req.user.id }).populate('userId');
         res.status(200).json(reservations);
-    } catch (err) {
-        res.status(400).json({ message: 'Erreur lors de la récupération des réservations', error: err });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error. Could not fetch reservations.' });
     }
 };
 
-module.exports = { reserveSession, getMyReservations };
+module.exports = { createReservation, getReservations };

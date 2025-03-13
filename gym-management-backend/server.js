@@ -27,7 +27,7 @@ connectDB()
 app.use('/api/auth', authRoutes);
 app.use('/api/users', verifyToken, userRoutes);
 app.use('/api/reservations', verifyToken, reservationRoutes);
-
+// /api/auth/login
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);

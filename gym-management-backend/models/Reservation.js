@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 
-const ReservationSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    session: { type: mongoose.Schema.Types.ObjectId, ref: 'Session', required: true },
-    startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
-});
+// Reservation Schema
+const reservationSchema = new mongoose.Schema({
+    date: { type: Date, required: true },
+    time: { type: String, required: true },
+    description: { type: String, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+}, { timestamps: true });
 
-module.exports = mongoose.model('Reservation', ReservationSchema);
+const Reservation = mongoose.model('Reservation', reservationSchema);
+
+module.exports = Reservation;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Footer from './components/footer';
+// import Footer from './components/footer';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ReservationPage from './pages/ReservationPage';
@@ -23,7 +23,7 @@ const App = () => {
           <Route path="/trainer/reservations/:id" element={<TrainerModifyReservationPage />} />
         </Routes>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </Router>
   );
 };
