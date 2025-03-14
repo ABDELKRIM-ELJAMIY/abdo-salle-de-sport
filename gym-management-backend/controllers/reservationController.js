@@ -28,7 +28,7 @@ const createReservation = async (req, res) => {
     }
 };
 
-// Fetch all reservations for the current user (optional, depending on your needs)
+// Fetch all reservations for the current user
 const getReservations = async (req, res) => {
     try {
         const reservations = await Reservation.find({ userId: req.user.id }).populate('userId');

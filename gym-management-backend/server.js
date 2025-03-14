@@ -12,13 +12,12 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Enable CORS Middleware (Import first)
+
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 
-// Middleware to parse JSON
+
 app.use(express.json());
 
-// Connect to MongoDB
 connectDB()
     .then(() => console.log("✅ MongoDB connected successfully"))
     .catch(err => console.error("❌ MongoDB connection failed:", err));

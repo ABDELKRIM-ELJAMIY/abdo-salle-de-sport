@@ -10,13 +10,13 @@ const LoginPage = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        // /api/auth/login
+        
 
         try {
-            const response = await axios.post('/api/auth/login', { email, password });
+            const response = await axios.post('http://localhost:8000/api/auth/login', { email, password });
             localStorage.setItem('token', response.data.token);
-            localStorage.setItem('role', response.data.role); // Store user role
-            navigate('/member/reservations'); // Redirect based on the role
+            localStorage.setItem('role', response.data.role); 
+            navigate('/member/reservations'); 
         } catch (err) {
             setError('Invalid credentials');
         }
