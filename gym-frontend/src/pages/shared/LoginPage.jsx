@@ -10,14 +10,24 @@ const LoginPage = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        
 
         try {
+            // Send login request
             const response = await axios.post('http://localhost:8000/api/auth/login', { email, password });
+
+            // Save token and role in local storage
             localStorage.setItem('token', response.data.token);
-            localStorage.setItem('role', response.data.role); 
-            navigate('/member/reservations'); 
+            localStorage.setItem('role', response.data.role);
+
+            // Check the role and navigate accordingly
+            const role = response.data.role;
+            if (role === 'admin') {
+                navigate('/admin/dashboard'); // Redirect to admin dashboard
+            } else if (role === 'user') {
+                navigate('/member/reservations'); // Redirect to member reservation page
+            }
         } catch (err) {
+            // Handle error if login fails
             setError('Invalid credentials');
         }
     };
