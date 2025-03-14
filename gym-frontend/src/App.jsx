@@ -8,6 +8,8 @@ import ReservationPage from './pages/ReservationPage';
 import TrainerReservationPage from './pages/TrainerReservationPage';
 import TrainerModifyReservationPage from './pages/TrainerModifyReservationPage';
 import MemberReservationPage from './pages/MemberReservationPage';
+import SessionPage from './pages/SessionPage'; // Import the session page
+import CreateSession from './pages/CreateSession'; // Import the create session page
 
 const App = () => {
   return (
@@ -21,6 +23,8 @@ const App = () => {
           <Route path="/member/reservations" element={<MemberReservationPage />} />
           <Route path="/trainer/reservations" element={<TrainerReservationPage />} />
           <Route path="/trainer/reservations/:id" element={<TrainerModifyReservationPage />} />
+          <Route path="/sessions" element={<SessionPage />} /> {/* Route for viewing all sessions */}
+          <Route path="/sessions/create" element={<CreateSession />} /> {/* Route for creating a new session */}
         </Routes>
       </div>
       {/* <Footer /> */}
