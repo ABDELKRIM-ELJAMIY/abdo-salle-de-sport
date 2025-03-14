@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Calendar from '../components/Calendar';
+import Calendar from "../../components/Calendar";
 import { format } from 'date-fns';
 
 const MemberReservationPage = () => {
