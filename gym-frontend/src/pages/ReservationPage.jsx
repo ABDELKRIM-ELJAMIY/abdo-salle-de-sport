@@ -1,77 +1,109 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import ReservationCard from '../components/ReservationCard';
-import Calendar from '../components/Calendar';
+// import ReservationCard from '../components/ReservationCard';
 
 const ReservationPage = () => {
-    const [reservations, setReservations] = useState([]); // Ensure it's an array
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [reservations, setReservations] = useState([]);
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('');
+    const [description, setDescription] = useState('');
+    const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
+    const token = localStorage.getItem('token'); // Get token from localStorage
+
+    // Fetch reservations when component loads
     useEffect(() => {
         const fetchReservations = async () => {
-            setLoading(true);
-            setError(null);
-
             try {
-                const response = await axios.get('/reservations');
-
-                // Ensure the response data is an array
-                if (Array.isArray(response.data)) {
-                    setReservations(response.data);
-                } else {
-                    console.error("Unexpected response format:", response.data);
-                    setReservations([]); // Fallback to empty array
-                }
+                const response = await axios.get('http://localhost:8000/api/reservations', {
+                    headers: {
+                        'x-auth-token': token,
+                    },
+                });
+                setReservations(response.data);
             } catch (err) {
                 console.error('Error fetching reservations:', err);
-                setError('Failed to fetch reservations.');
-            } finally {
-                setLoading(false);
             }
         };
 
         fetchReservations();
-    }, [selectedDate]);
+    }, [token]);
 
-    const handleReservation = async (reservationId) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const reservationData = {
+            date,
+            time,
+            description,
+        };
+
         try {
-            await axios.post(`/reservations/book/${reservationId}`);
-            alert('✅ Reservation successful!');
+            const response = await axios.post(
+                'http://localhost:8000/api/reservations',
+                reservationData,
+                {
+                    headers: {
+                        'x-auth-token': token, // Include token in the header
+                    },
+                }
+            );
+            setSuccessMessage('Reservation created successfully!');
+            setReservations([...reservations, response.data]); // Update the reservation list
         } catch (err) {
-            alert('❌ Error booking reservation');
+            setError('Failed to create reservation');
             console.error(err);
         }
     };
 
     return (
-        <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-            <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Available Reservations</h2>
+        <div className="reservation-page">
+            <h1 className="text-2xl font-semibold mb-4">Create Reservation</h1>
+            {error && <div className="error text-red-500 mb-4">{error}</div>}
+            {successMessage && <div className="success text-green-500 mb-4">{successMessage}</div>}
 
-            {/* Calendar Component */}
-            <div className="flex justify-center mb-6">
-                <Calendar onSelectDate={setSelectedDate} />
-            </div>
-
-            {/* Loading & Error Handling */}
-            {loading ? (
-                <p className="text-center text-gray-500">Loading reservations...</p>
-            ) : error ? (
-                <p className="text-center text-red-500">{error}</p>
-            ) : reservations.length === 0 ? (
-                <p className="text-center text-gray-500">No available reservations for this date.</p>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {reservations?.map((reservation) => (
-                        <ReservationCard
-                            key={reservation._id}
-                            reservation={reservation}
-                            onClick={() => handleReservation(reservation._id)}
-                        />
-                    ))}
+            <form onSubmit={handleSubmit} className="mb-6">
+                <div className="space-y-4">
+                    <input
+                        type="date"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        className="w-full p-2 border rounded-md"
+                        required
+                    />
+                    <input
+                        type="time"
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
+                        className="w-full p-2 border rounded-md"
+                        required
+                    />
+                    <textarea
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Description"
+                        className="w-full p-2 border rounded-md"
+                        required
+                    ></textarea>
+                    <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded-md">
+                        Create Reservation
+                    </button>
                 </div>
-            )}
+            </form>
+
+            <h2 className="text-xl font-semibold">Existing Reservations</h2>
+            <div className="reservation-list">
+                {reservations.length === 0 ? (
+                    <p>No reservations found</p>
+                ) : (
+                    <div className="space-y-4">
+                        {reservations.map((reservation) => (
+                            <ReservationCard key={reservation._id} reservation={reservation} />
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
