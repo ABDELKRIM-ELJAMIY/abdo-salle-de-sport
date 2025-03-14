@@ -18,14 +18,13 @@ const MemberReservationPage = () => {
 
                 if (!token) {
                     setError('Unauthorized: No token found');
-                    console.log(err)
                     return;
                 }
 
                 const response = await axios.get('http://localhost:8000/api/reservations', {
                     headers: {
                         'x-auth-token': token,
-                    }
+                    },
                 });
 
                 if (Array.isArray(response.data)) {
@@ -61,13 +60,13 @@ const MemberReservationPage = () => {
             await axios.post('http://localhost:8000/api/reservations', newReservation, {
                 headers: {
                     'x-auth-token': token,
-                }
+                },
             });
 
             const response = await axios.get('http://localhost:8000/api/reservations', {
                 headers: {
                     'x-auth-token': token,
-                }
+                },
             });
 
             if (Array.isArray(response.data)) {
@@ -90,10 +89,10 @@ const MemberReservationPage = () => {
         return (
             <div className="bg-white p-4 rounded-lg shadow-md mb-4">
                 <h3 className="text-lg font-semibold">{reservation.sessionName || 'Session Name'}</h3>
-                <p>Date: {formattedDate}</p>
-                <p>Time: {reservation.time}</p>
-                <p>Description: {reservation.description}</p>
-                <p>Status: {reservation.status || 'Not Available'}</p>
+                <p><strong>Date:</strong> {formattedDate}</p>
+                <p><strong>Time:</strong> {reservation.time}</p>
+                <p><strong>Description:</strong> {reservation.description}</p>
+                <p><strong>Status:</strong> {reservation.status || 'Not Available'}</p>
             </div>
         );
     };

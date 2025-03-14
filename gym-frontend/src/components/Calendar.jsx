@@ -9,7 +9,7 @@ const Calendar = ({ onSelectDate }) => {
 
     const handleChange = (date) => {
         setStartDate(date);
-        onSelectDate(date); // Calling the passed prop function
+        onSelectDate(date); 
     };
 
     return (

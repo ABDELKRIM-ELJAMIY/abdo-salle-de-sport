@@ -1,12 +1,35 @@
 const mongoose = require('mongoose');
 
-const SessionSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
-    trainer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    availableSlots: { type: Number, required: true },
-});
+const sessionSchema = new mongoose.Schema(
+    {
+        sessionName: {
+            type: String,
+            required: true,
+        },
+        startDate: {
+            type: Date,
+            required: true,
+        },
+        endDate: {
+            type: Date,
+            required: true,
+        },
+        trainerName: {
+            type: String,
+            required: true,
+        },
+        capacity: {
+            type: Number,
+            required: true,
+        },
+        status: {
+            type: String,
+            enum: ['Available', 'Full', 'Not Available'],
+            default: 'Available',
+        },
+    },
+    { timestamps: true }
+);
 
-module.exports = mongoose.model('Session', SessionSchema);
+const Session = mongoose.model('Session', sessionSchema);
+module.exports = Session;
