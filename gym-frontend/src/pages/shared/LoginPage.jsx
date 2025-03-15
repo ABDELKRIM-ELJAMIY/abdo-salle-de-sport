@@ -54,7 +54,7 @@ const LoginPage = () => {
 
             // Redirect based on role
             if (role === 'admin') {
-                navigate('/admin/create-session');
+                navigate('/admin/dashboard');
             } else {
                 navigate('/user/dashboard');
             }

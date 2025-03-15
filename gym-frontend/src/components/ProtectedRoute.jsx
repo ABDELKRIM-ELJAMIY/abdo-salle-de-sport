@@ -9,12 +9,18 @@ const ProtectedRoute = ({ element, allowedRoles }) => {
         return <Navigate to="/login" />;
     }
 
-    if (!allowedRoles.includes(role)) {
-        // Redirect to a "Not Authorized" page or a default route if the role is not authorized
-        return <Navigate to="/" />;
+    // If the role is 'admin', allow access to all pages (both user and admin)
+    if (role === 'admin') {
+        return element;
     }
 
-    return element; // Render the protected component if the user has the right role
+    // If the role is not 'admin' but is included in the allowedRoles, allow access
+    if (allowedRoles.includes(role)) {
+        return element;
+    }
+
+    // Redirect to a "Not Authorized" page or a default route if the role is not authorized
+    return <Navigate to="/" />;
 };
 
 export default ProtectedRoute;
