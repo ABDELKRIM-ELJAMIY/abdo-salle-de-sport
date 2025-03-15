@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-// import DatePicker from "react-datepicker";
 import DatePicker from "react-datepicker";
-
 import "react-datepicker/dist/react-datepicker.css";
 
 const Calendar = ({ onSelectDate }) => {
@@ -9,7 +7,16 @@ const Calendar = ({ onSelectDate }) => {
 
     const handleChange = (date) => {
         setStartDate(date);
-        onSelectDate(date); 
+        onSelectDate(date);
+    };
+
+    // Function to customize the day class
+    const dayClassName = (date) => {
+        const day = date.getDate();
+        if (day === 15) {
+            return "highlighted-day"; // Example: Custom class for day 15
+        }
+        return ""; // No custom class for other days
     };
 
     return (
@@ -19,6 +26,7 @@ const Calendar = ({ onSelectDate }) => {
                 onChange={handleChange}
                 inline
                 dateFormat="yyyy/MM/dd"
+                dayClassName={dayClassName} // Correctly passing the function here
             />
         </div>
     );

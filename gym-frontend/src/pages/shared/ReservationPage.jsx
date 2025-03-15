@@ -58,50 +58,52 @@ const ReservationPage = () => {
     };
 
     return (
-        <div className="reservation-page">
-            <h1 className="text-2xl font-semibold mb-4">Create Reservation</h1>
-            {error && <div className="error text-red-500 mb-4">{error}</div>}
-            {successMessage && <div className="success text-green-500 mb-4">{successMessage}</div>}
+        <div className="bg-gray-900 p-6 rounded-lg shadow-md">
+            <h1 className="text-2xl font-semibold text-white mb-4">Create Reservation</h1>
+            {error && <div className="text-red-500 bg-red-100 p-2 rounded-md text-center mb-4">{error}</div>}
+            {successMessage && <div className="text-green-500 bg-green-100 p-2 rounded-md text-center mb-4">{successMessage}</div>}
 
-            <form onSubmit={handleSubmit} className="mb-6">
-                <div className="space-y-4">
-                    <input
-                        type="date"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                        className="w-full p-2 border rounded-md"
-                        required
-                    />
-                    <input
-                        type="time"
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                        className="w-full p-2 border rounded-md"
-                        required
-                    />
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        placeholder="Description"
-                        className="w-full p-2 border rounded-md"
-                        required
-                    ></textarea>
-                    <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded-md">
-                        Create Reservation
-                    </button>
-                </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="w-full p-2 border border-gray-700 rounded-md bg-gray-700 text-white placeholder-gray-400"
+                    required
+                />
+                <input
+                    type="time"
+                    value={time}
+                    onChange={(e) => setTime(e.target.value)}
+                    className="w-full p-2 border border-gray-700 rounded-md bg-gray-700 text-white placeholder-gray-400"
+                    required
+                />
+                <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Description"
+                    className="w-full p-2 border border-gray-700 rounded-md bg-gray-700 text-white placeholder-gray-400"
+                    required
+                ></textarea>
+                <button type="submit" className="w-full bg-orange-500 text-white p-2 rounded-md hover:bg-orange-600 focus:border-orange-500">
+                    Create Reservation
+                </button>
             </form>
 
-            <h2 className="text-xl font-semibold">Existing Reservations</h2>
-            <div className="reservation-list">
+            <h2 className="text-xl font-semibold text-white mt-6">Existing Reservations</h2>
+            <div className="reservation-list space-y-4">
                 {reservations.length === 0 ? (
-                    <p>No reservations found</p>
+                    <p className="text-white">No reservations found</p>
                 ) : (
-                    <div className="space-y-4">
-                        {reservations.map((reservation) => (
-                            <ReservationCard key={reservation._id} reservation={reservation} />
-                        ))}
-                    </div>
+                    reservations.map((reservation) => (
+                        <div key={reservation._id} className="bg-gray-800 p-4 rounded-md shadow-md">
+                            {/* Render the ReservationCard component */}
+                            <div className="text-white">
+                                <h3 className="text-lg font-semibold">{reservation.date} - {reservation.time}</h3>
+                                <p>{reservation.description}</p>
+                            </div>
+                        </div>
+                    ))
                 )}
             </div>
         </div>
