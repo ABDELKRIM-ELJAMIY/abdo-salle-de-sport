@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode'; // ✅ Corrected import
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -8,27 +9,58 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
+    // const handleLogin = async (e) => {
+    //     e.preventDefault();
+
+    //     try {
+    //         const response = await axios.post('http://localhost:8000/api/auth/login', { email, password });
+
+    //         // Save token
+    //         const token = response.data.token;
+    //         localStorage.setItem('token', token);
+
+    //         // Decode token to extract role
+    //         const decoded = jwt_decode(token);
+    //         const role = decoded.role; // Ensure your backend includes `role` in the token payload
+
+    //         localStorage.setItem('role', role);
+
+    //         // Redirect based on role
+    //         if (role === 'admin') {
+    //             navigate('/admin/dashboard');
+    //         } else {
+    //             navigate('/member/reservations');
+    //         }
+    //     } catch (err) {
+    //         setError('Invalid credentials');
+    //     }
+    // };
     const handleLogin = async (e) => {
         e.preventDefault();
 
         try {
-            // Send login request
             const response = await axios.post('http://localhost:8000/api/auth/login', { email, password });
 
-            // Save token and role in local storage
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('role', response.data.role);
+            console.log("Login successful:", response.data); // ✅ Debugging
 
-            // Check the role and navigate accordingly
-            const role = response.data.role;
+            const token = response.data.token;
+            localStorage.setItem('token', token);
+
+            // Decode token to extract role
+            const decoded = jwtDecode(token);
+            const role = decoded.role;
+
+            localStorage.setItem('role', role);
+
+            // Redirect based on role
             if (role === 'admin') {
-                navigate('/admin/dashboard'); // Redirect to admin dashboard
-            } else if (role === 'user') {
-                navigate('/member/reservations'); // Redirect to member reservation page
+                navigate('/admin/create-session');
+            } else {
+                navigate('/user/dashboard');
             }
         } catch (err) {
-            // Handle error if login fails
-            setError('Invalid credentials');
+            console.error("Login error:", err.response?.data || err.message); // ✅ Debugging
+            setError(err.response?.data?.message || 'Invalid credentials');
         }
     };
 

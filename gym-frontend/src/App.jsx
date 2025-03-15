@@ -36,9 +36,8 @@
 // };
 
 // export default App;
-
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/shared/HomePage'; // Public Home page
 import Navbar from './components/Navbar'; // Global Navbar (will be conditionally rendered based on role)
 import LoginPage from './pages/shared/LoginPage'; // Public Login page
@@ -50,13 +49,15 @@ import MemberReservationPage from './pages/user/MemberReservationPage'; // User 
 import SessionPage from './pages/shared/SessionPage'; // Shared Session Page (accessible by both user and admin)
 import CreateSession from './pages/admin/CreateSession'; // Admin Create Session Page
 import ProtectedRoute from './components/ProtectedRoute'; // Protected route component for role-based access
+import AdminDashboard from './pages/admin/AdminDashboard'; // Admin Dashboard page
+import UserDashboard from './pages/user/UserDashboard'; // User Dashboard page
 
 const App = () => {
   const role = localStorage.getItem('role'); // Get the role from localStorage (could also be from context)
 
   return (
     <Router>
-      <Navbar /> 
+      <Navbar />
 
       <Routes>
         {/* Public Routes */}
@@ -65,6 +66,15 @@ const App = () => {
         <Route path="/register" element={<RegisterPage />} />
 
         {/* Protected Routes for User */}
+        <Route
+          path="/user/dashboard"
+          element={
+            <ProtectedRoute
+              element={<UserDashboard />}
+              allowedRoles={['user']}
+            />
+          }
+        />
         <Route
           path="/user/reservations"
           element={
@@ -76,6 +86,15 @@ const App = () => {
         />
 
         {/* Protected Routes for Admin */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute
+              element={<AdminDashboard />}
+              allowedRoles={['admin']}
+            />
+          }
+        />
         <Route
           path="/admin/create-session"
           element={
